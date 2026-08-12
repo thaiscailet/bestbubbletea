@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A responsive, frontend-only bubble tea and snack ordering application.">
+  <title>Pearl &amp; Leaf | Bubble Tea Ordering</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-body">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="dashboard-shell">
+    <aside class="desktop-sidebar" aria-label="Application navigation">
+      <a class="sidebar-brand" href="#home" aria-label="Pearl & Leaf home">
+        <span class="sidebar-logo" aria-hidden="true">P&amp;L</span>
+        <span class="sidebar-brand-copy">
+          <strong>Pearl &amp; Leaf</strong>
+          <small>Bubble tea & snacks</small>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav" aria-label="Desktop navigation">
+        <a class="sidebar-link is-active" href="#home"><span aria-hidden="true">⌂</span>Home</a>
+        <a class="sidebar-link" href="#menu"><span aria-hidden="true">☷</span>Menu</a>
+        <a class="sidebar-link" href="#orders"><span aria-hidden="true">▤</span>Orders</a>
+        <button id="favorites-nav-button" class="sidebar-link" type="button">
+          <span aria-hidden="true">♡</span>Favorites
+          <span id="favorites-count" class="sidebar-count">0</span>
+        </button>
+        <a class="sidebar-link" href="#profile"><span aria-hidden="true">◎</span>Profile</a>
+        <button id="admin-nav-button" class="sidebar-link" type="button"><span aria-hidden="true">⚙</span>Admin</button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Pickup or delivery</strong>
+        <span>Review your cart before checkout.</span>
+      </div>
+    </aside>
+
+    <div class="dashboard-workspace">
+      <header class="mobile-dashboard-header">
+        <a class="brand-link" href="#home" aria-label="Pearl & Leaf home">
+          <span class="brand-mark" aria-hidden="true">P&amp;L</span>
+          <span><strong>Pearl &amp; Leaf</strong><small>Bubble tea & snacks</small></span>
+        </a>
+        <div class="mobile-header-actions">
+          <button id="mobile-cart-button" class="mobile-cart-pill" type="button">Cart <span id="mobile-cart-count">0</span></button>
+          <button id="mobile-menu-button" class="icon-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">☰</button>
+        </div>
+      </header>
+
+      <div id="mobile-menu" class="hidden mobile-menu-panel">
+        <a class="mobile-nav-link" href="#home">Home</a>
+        <a class="mobile-nav-link" href="#menu">Menu</a>
+        <a class="mobile-nav-link" href="#orders">Orders</a>
+        <button id="mobile-favorites-button" class="mobile-nav-link text-left" type="button">Favorites</button>
+        <a class="mobile-nav-link" href="#profile">Profile</a>
+        <button id="mobile-admin-button" class="mobile-nav-link text-left" type="button">Admin</button>
+      </div>
+      <main id="main-content" class="dashboard-content">
+        <section id="home" class="dashboard-home scroll-mt-24">
+          <div class="utility-bar" aria-label="Quick actions">
+            <button id="quick-search-button" class="utility-pill" type="button"><span aria-hidden="true">⌕</span>Search</button>
+            <button id="popular-filter-button" class="utility-pill" type="button" aria-pressed="false"><span aria-hidden="true">◇</span>Popular</button>
+            <button id="cart-button" class="utility-pill" type="button" aria-haspopup="dialog"><span aria-hidden="true">🛒</span><span id="cart-count" aria-label="0 items">0</span> Items</button>
+            <a class="utility-pill utility-pill-address" href="#profile"><span aria-hidden="true">◎</span>Address</a>
+          </div>
+
+          <div class="compact-hero">
+            <div class="compact-hero-copy">
+              <p class="eyebrow">Freshly shaken, made your way</p>
+              <h1>Find your next boba break.</h1>
+              <p>Choose a tea, add a favorite snack, and place a pickup or delivery order from any device.</p>
+              <div class="compact-hero-actions">
+                <a class="primary-button" href="#menu">Browse menu</a>
+                <a class="secondary-button" href="#orders">Track order</a>
+              </div>
+            </div>
+
+            <article class="featured-strip">
+              <div class="featured-strip-image">
+                <img src="assets/hero-boba.svg" alt="Illustration of bubble tea, fries, and takoyaki">
+              </div>
+              <div>
+                <p>Shop favorite</p>
+                <h2>Brown Sugar Snack Pair</h2>
+                <span>Brown sugar pearl milk tea paired with takoyaki bites for a sweet-and-savory break.</span>
+              </div>
+              <button class="featured-add-button" type="button" data-add-item="milk-tea-brown-sugar">Add</button>
+            </article>
+          </div>
+        </section>
+
+        <section id="menu" class="dashboard-section scroll-mt-24">
+          <div class="menu-heading-row">
+            <div>
+              <p class="eyebrow">Customer menu</p>
+              <h2 id="menu-heading">Explore drinks and snacks</h2>
+              <p>Choose a category from the right rail, search by flavor, or sort the complete menu.</p>
+            </div>
+            <button id="reset-filters-button" class="text-button" type="button">Reset filters</button>
+          </div>
+
+          <div id="menu-toolbar" class="menu-toolbar">
+            <div class="form-field grow">
+              <label for="menu-search">Search the menu</label>
+              <input id="menu-search" type="search" placeholder="Search milk tea, fruit tea, fries, or takoyaki" autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label for="menu-category">Category</label>
+              <select id="menu-category"><option value="all">All categories</option></select>
+            </div>
+            <div class="form-field">
+              <label for="menu-sort">Sort by</label>
+              <select id="menu-sort">
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: low to high</option>
+                <option value="price-high">Price: high to low</option>
+                <option value="rating">Customer rating</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="menu-status" class="loading-panel" role="status" aria-live="polite">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <span>Loading menu items…</span>
+          </div>
+          <div id="menu-grid" class="menu-grid" aria-live="polite"></div>
+        </section>
+
+<section id="orders" class="scroll-mt-24 border-y border-slate-200 bg-white py-16">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p class="eyebrow">Order tracking</p>
+            <h2 class="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Your recent orders</h2>
+          </div>
+          <button id="open-cart-from-orders" class="secondary-button self-start sm:self-auto" type="button">Start an order</button>
+        </div>
+        <div id="orders-list" class="mt-8 space-y-5"></div>
+      </div>
+    </section>
+
+    <section id="profile" class="scroll-mt-24 py-16">
+      <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
+        <div class="lg:col-span-5">
+          <p class="eyebrow">Customer profile</p>
+          <h2 class="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Save checkout details</h2>
+          <p class="mt-4 max-w-xl leading-7 text-slate-600">
+            Profile details are stored in this browser and used to prefill checkout. Payment card details are never stored.
+          </p>
+          <div class="mt-6 rounded-2xl border border-orange-200 bg-orange-50 p-5 text-sm leading-6 text-orange-950">
+            This is a frontend demonstration. Account identity and authentication would require a secure server in a production application.
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <form id="profile-form" class="form-card" novalidate>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div class="form-field sm:col-span-2">
+                <label for="profile-name">Full name</label>
+                <input id="profile-name" name="name" type="text" autocomplete="name" required minlength="2">
+              </div>
+              <div class="form-field">
+                <label for="profile-email">Email address</label>
+                <input id="profile-email" name="email" type="email" autocomplete="email" required>
+              </div>
+              <div class="form-field">
+                <label for="profile-phone">Phone number</label>
+                <input id="profile-phone" name="phone" type="tel" autocomplete="tel" required pattern="[0-9+() .-]{7,}">
+              </div>
+              <div class="form-field sm:col-span-2">
+                <label for="profile-address">Delivery address</label>
+                <textarea id="profile-address" name="address" rows="3" autocomplete="street-address"></textarea>
+              </div>
+              <div class="form-field">
+                <label for="profile-favorite">Favorite category</label>
+                <select id="profile-favorite" name="favoriteCategory">
+                  <option value="">No preference</option>
+                </select>
+              </div>
+              <label class="checkbox-field self-end">
+                <input id="profile-updates" name="updates" type="checkbox">
+                <span>Send occasional drink and snack specials</span>
+              </label>
+            </div>
+            <div class="mt-6 flex flex-wrap items-center gap-3">
+              <button class="primary-button" type="submit">Save profile</button>
+              <button id="clear-profile-button" class="secondary-button" type="button">Clear profile</button>
+              <p id="profile-status" class="text-sm text-slate-600" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin-panel" class="hidden scroll-mt-24 border-t border-slate-200 bg-slate-950 py-16 text-white">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+          <div>
+            <p class="eyebrow eyebrow-light">Restaurant operations</p>
+            <h2 class="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Admin dashboard</h2>
+            <p class="mt-3 max-w-2xl text-slate-300">
+              Manage drink and snack availability and update the progress of orders placed in this browser.
+            </p>
+          </div>
+          <button id="admin-logout-button" class="admin-secondary-button self-start lg:self-auto" type="button">Log out</button>
+        </div>
+
+        <div id="admin-stats" class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"></div>
+
+        <div class="mt-10 grid gap-8 xl:grid-cols-12">
+          <section class="admin-card xl:col-span-5" aria-labelledby="menu-editor-title">
+            <div class="flex items-center justify-between gap-4">
+              <h3 id="menu-editor-title" class="text-xl font-bold">Menu item editor</h3>
+              <button id="reset-menu-button" class="admin-text-button" type="button">Restore menu</button>
+            </div>
+            <form id="admin-menu-form" class="mt-6 grid gap-4" novalidate>
+              <input id="admin-item-id" name="id" type="hidden">
+              <div class="form-field form-field-dark">
+                <label for="admin-item-name">Item name</label>
+                <input id="admin-item-name" name="name" type="text" required minlength="2">
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="form-field form-field-dark">
+                  <label for="admin-item-category">Category</label>
+                  <input id="admin-item-category" name="category" type="text" required>
+                </div>
+                <div class="form-field form-field-dark">
+                  <label for="admin-item-price">Price</label>
+                  <input id="admin-item-price" name="price" type="number" min="0.01" step="0.01" required>
+                </div>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="form-field form-field-dark">
+                  <label for="admin-item-rating">Rating</label>
+                  <input id="admin-item-rating" name="rating" type="number" min="1" max="5" step="0.1" value="4.5" required>
+                </div>
+                <div class="form-field form-field-dark">
+                  <label for="admin-item-image">Illustration</label>
+                  <select id="admin-item-image" name="image">
+                    <option value="assets/milk-tea.svg">Milk tea</option>
+                    <option value="assets/taro-tea.svg">Taro tea</option>
+                    <option value="assets/fruit-tea.svg">Fruit tea</option>
+                    <option value="assets/slush.svg">Slush</option>
+                    <option value="assets/fries.svg">Fries</option>
+                    <option value="assets/takoyaki.svg">Takoyaki</option>
+                    <option value="assets/popcorn-chicken.svg">Popcorn chicken</option>
+                    <option value="assets/egg-waffle.svg">Egg waffle</option>
+                    <option value="assets/mochi.svg">Mochi</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-field form-field-dark">
+                <label for="admin-item-description">Description</label>
+                <textarea id="admin-item-description" name="description" rows="3" required minlength="8"></textarea>
+              </div>
+              <label class="checkbox-field checkbox-field-dark">
+                <input id="admin-item-vegetarian" name="vegetarian" type="checkbox">
+                <span>Vegetarian item</span>
+              </label>
+              <div class="flex flex-wrap gap-3">
+                <button class="admin-primary-button" type="submit">Save item</button>
+                <button id="cancel-menu-edit-button" class="admin-secondary-button" type="button">Clear form</button>
+              </div>
+              <p id="admin-menu-status" class="text-sm text-slate-300" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="admin-card overflow-hidden xl:col-span-7" aria-labelledby="admin-menu-title">
+            <h3 id="admin-menu-title" class="text-xl font-bold">Current menu</h3>
+            <div class="admin-table-wrapper mt-5">
+              <table class="admin-table">
+                <caption class="sr-only">Current menu items and actions</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-menu-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <section class="admin-card mt-8" aria-labelledby="admin-orders-title">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h3 id="admin-orders-title" class="text-xl font-bold">Order tracking</h3>
+            <span class="text-sm text-slate-300">Status changes update the customer view immediately.</span>
+          </div>
+          <div class="admin-table-wrapper mt-5">
+            <table class="admin-table">
+              <caption class="sr-only">Orders and current status</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Order</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Placed</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="admin-orders-table-body"></tbody>
+            </table>
+          </div>
+          <div id="admin-orders-empty" class="hidden rounded-xl border border-dashed border-slate-700 p-6 text-center text-slate-300">
+            No orders have been placed yet.
+          </div>
+        </section>
+      </div>
+    </section>
+  
+      </main>
+
+<footer class="border-t border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-sm text-slate-600 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <p>© <span id="current-year"></span> Pearl &amp; Leaf.</p>
+      <p>Frontend demonstration — no real accounts, payments, or deliveries.</p>
+    </div>
+  </footer>
+    </div>
+
+    <aside class="category-rail" aria-labelledby="category-rail-title">
+      <div class="category-rail-inner">
+        <p class="category-rail-kicker">Sip or snack</p>
+        <h2 id="category-rail-title">Choose a craving</h2>
+        <span class="category-rail-accent" aria-hidden="true"></span>
+        <div id="category-rail-list" class="category-rail-list"></div>
+        <button id="show-all-categories-button" class="category-all-button" type="button">Show complete menu</button>
+      </div>
+    </aside>
+  </div>
+
+
+<div id="cart-overlay" class="drawer-overlay hidden" aria-hidden="true"></div>
+  <aside id="cart-drawer" class="cart-drawer" aria-labelledby="cart-title" aria-hidden="true">
+    <div class="flex items-center justify-between gap-4 border-b border-slate-200 p-5">
+      <div>
+        <p class="text-sm font-semibold text-orange-700">Current order</p>
+        <h2 id="cart-title" class="text-2xl font-bold">Your cart</h2>
+      </div>
+      <button id="close-cart-button" class="icon-button" type="button" aria-label="Close cart">×</button>
+    </div>
+    <div id="cart-items" class="cart-items"></div>
+    <div class="border-t border-slate-200 p-5">
+      <dl class="space-y-2 text-sm">
+        <div class="flex justify-between gap-4"><dt>Subtotal</dt><dd id="cart-subtotal">$0.00</dd></div>
+        <div class="flex justify-between gap-4"><dt>Estimated tax</dt><dd id="cart-tax">$0.00</dd></div>
+        <div class="flex justify-between gap-4"><dt>Estimated delivery</dt><dd id="cart-delivery">$0.00</dd></div>
+        <div class="flex justify-between gap-4 border-t border-slate-200 pt-3 text-base font-bold"><dt>Estimated total</dt><dd id="cart-total">$0.00</dd></div>
+      </dl>
+      <button id="checkout-button" class="mt-5 w-full primary-button" type="button" disabled>Continue to checkout</button>
+      <button id="clear-cart-button" class="mt-2 w-full text-button" type="button" disabled>Clear cart</button>
+    </div>
+  </aside>
+
+  <dialog id="checkout-dialog" class="app-dialog">
+    <form id="checkout-form" method="dialog" novalidate>
+      <div class="dialog-header">
+        <div>
+          <p class="text-sm font-semibold text-orange-700">Secure-looking demo, no transaction</p>
+          <h2 class="text-2xl font-bold">Checkout</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog="checkout-dialog" aria-label="Close checkout">×</button>
+      </div>
+
+      <div class="dialog-body grid gap-8 lg:grid-cols-12">
+        <div class="space-y-6 lg:col-span-7">
+          <fieldset>
+            <legend class="form-legend">Order type</legend>
+            <div class="choice-grid">
+              <label class="choice-card">
+                <input name="orderType" type="radio" value="delivery" checked>
+                <span><strong>Delivery</strong><small>Bring the order to your address.</small></span>
+              </label>
+              <label class="choice-card">
+                <input name="orderType" type="radio" value="pickup">
+                <span><strong>Pickup</strong><small>Collect it from the shop.</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="form-field sm:col-span-2">
+              <label for="checkout-name">Full name</label>
+              <input id="checkout-name" name="name" type="text" autocomplete="name" required minlength="2">
+            </div>
+            <div class="form-field">
+              <label for="checkout-email">Email address</label>
+              <input id="checkout-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="form-field">
+              <label for="checkout-phone">Phone number</label>
+              <input id="checkout-phone" name="phone" type="tel" autocomplete="tel" required pattern="[0-9+() .-]{7,}">
+            </div>
+            <div id="checkout-address-field" class="form-field sm:col-span-2">
+              <label for="checkout-address">Delivery address</label>
+              <textarea id="checkout-address" name="address" rows="3" autocomplete="street-address" required></textarea>
+            </div>
+            <div class="form-field sm:col-span-2">
+              <label for="checkout-notes">Order notes <span class="font-normal text-slate-500">(optional)</span></label>
+              <textarea id="checkout-notes" name="notes" rows="2" maxlength="180" placeholder="Allergies, gate code, or pickup notes"></textarea>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend class="form-legend">Payment method</legend>
+            <div class="choice-grid">
+              <label class="choice-card">
+                <input name="paymentMethod" type="radio" value="card" checked>
+                <span><strong>Card</strong><small>Validated locally for this demonstration.</small></span>
+              </label>
+              <label class="choice-card">
+                <input name="paymentMethod" type="radio" value="pay-at-counter">
+                <span><strong>Pay at counter</strong><small>Available for pickup orders.</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div id="card-fields" class="grid gap-4 sm:grid-cols-2">
+            <div class="form-field sm:col-span-2">
+              <label for="card-number">Card number</label>
+              <input id="card-number" name="cardNumber" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="19" required>
+            </div>
+            <div class="form-field">
+              <label for="card-expiry">Expiration</label>
+              <input id="card-expiry" name="cardExpiry" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" required>
+            </div>
+            <div class="form-field">
+              <label for="card-cvc">Security code</label>
+              <input id="card-cvc" name="cardCvc" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required>
+            </div>
+          </div>
+
+          <p class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
+            This checkout is simulated. No payment is processed, transmitted, or stored.
+          </p>
+        </div>
+
+        <aside class="lg:col-span-5">
+          <div class="checkout-summary-card">
+            <h3 class="text-lg font-bold">Order summary</h3>
+            <div id="checkout-items" class="mt-4 space-y-3"></div>
+            <dl class="mt-5 space-y-2 border-t border-slate-200 pt-4 text-sm">
+              <div class="flex justify-between"><dt>Subtotal</dt><dd id="checkout-subtotal">$0.00</dd></div>
+              <div class="flex justify-between"><dt>Tax</dt><dd id="checkout-tax">$0.00</dd></div>
+              <div class="flex justify-between"><dt>Delivery</dt><dd id="checkout-delivery">$0.00</dd></div>
+              <div class="flex justify-between border-t border-slate-200 pt-3 text-base font-bold"><dt>Total</dt><dd id="checkout-total">$0.00</dd></div>
+            </dl>
+            <div id="checkout-progress" class="hidden mt-5" role="status" aria-live="polite">
+              <div class="mb-2 flex justify-between text-sm"><span>Placing order…</span><span>Processing</span></div>
+              <div class="progress-track"><div class="progress-value progress-animated"></div></div>
+            </div>
+            <button id="place-order-button" class="mt-5 w-full primary-button" type="submit">Place order</button>
+            <p id="checkout-status" class="mt-3 text-sm text-slate-600" aria-live="polite"></p>
+          </div>
+        </aside>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="admin-login-dialog" class="app-dialog app-dialog-small">
+    <form id="admin-login-form" method="dialog" novalidate>
+      <div class="dialog-header">
+        <div>
+          <p class="text-sm font-semibold text-orange-700">Restaurant staff</p>
+          <h2 class="text-2xl font-bold">Admin login</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog="admin-login-dialog" aria-label="Close admin login">×</button>
+      </div>
+      <div class="dialog-body space-y-5">
+        <p class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
+          Demo credentials: <strong>admin@pearlandleaf.test</strong> / <strong>demo1234</strong>
+        </p>
+        <div class="form-field">
+          <label for="admin-email">Email address</label>
+          <input id="admin-email" name="email" type="email" autocomplete="username" required value="admin@forkandflame.test">
+        </div>
+        <div class="form-field">
+          <label for="admin-password">Password</label>
+          <input id="admin-password" name="password" type="password" autocomplete="current-password" required minlength="8" value="demo1234">
+        </div>
+        <button class="w-full primary-button" type="submit">Open dashboard</button>
+        <p id="admin-login-status" class="text-sm text-red-700" aria-live="polite"></p>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="app.js" defer></script>
+
+</body>
+</html>
